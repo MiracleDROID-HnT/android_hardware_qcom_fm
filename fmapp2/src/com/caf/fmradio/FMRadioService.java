@@ -3313,7 +3313,11 @@ public class FMRadioService extends Service
       {
          bAvailable = true;
       }
-      return true;
+       if (getResources().getBoolean(R.bool.config_enableWirelessFM)) {
+           return true;
+       } else {
+           return bAvailable;
+       }
    }
 
    public static long getAvailableSpace() {

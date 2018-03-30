@@ -305,7 +305,7 @@ public class FMRadioService extends Service
                                   if ((mServiceInUse) && (mCallbacks != null) ) {
                                       Log.d(LOGTAG, "start recording thread");
                                       mCallbacks.onRecordingStarted();
-                                  } 
+                                  }
                              } catch (RemoteException e) {
                                   e.printStackTrace();
                              }
@@ -2352,7 +2352,11 @@ private Runnable mSpeakerDisableTask = new Runnable() {
       {
          bAvailable = true;
       }
-      return true;
+      if (getResources().getBoolean(R.bool.config_enableWirelessFM)) {
+          return true;
+      } else {
+          return bAvailable;
+      }
    }
 
    public static long getAvailableSpace() {

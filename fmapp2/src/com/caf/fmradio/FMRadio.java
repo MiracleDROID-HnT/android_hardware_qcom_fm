@@ -1064,8 +1064,12 @@ public class FMRadio extends Activity
              e.printStackTrace();
           }
        }
-       return true;
-    }
+       if (getResources().getBoolean(R.bool.config_enableWirelessFM)) {
+           return true;
+       } else {
+           return bAvailable;
+       }
+   }
 
     boolean isCallActive(){
         boolean bCallActive = false;
