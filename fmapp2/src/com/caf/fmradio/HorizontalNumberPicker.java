@@ -662,7 +662,8 @@ public class HorizontalNumberPicker extends LinearLayout {
         paint.setAntiAlias(true);
         paint.setTextAlign(Align.CENTER);
         paint.setTextSize(mTextSize);
-        paint.setColor(Color.WHITE);
+        int freqTextColor = getResources().getColor(com.caf.fmradio.R.color.picker_frequency_text_color);
+        paint.setColor(freqTextColor);
         mSelectorWheelPaint = paint;
 
 
@@ -1451,17 +1452,18 @@ public class HorizontalNumberPicker extends LinearLayout {
 
         // draw the selector wheel
         int[] selectorIndices = mSelectorIndices;
+        int freqColor = getResources().getColor(com.caf.fmradio.R.color.picker_frequency_color);
         for (int i = 0; i < selectorIndices.length; i++) {
             int selectorIndex = selectorIndices[i];
             float fNumber = 0;
             String scrollSelectorValue = mSelectorIndexToStringCache
                     .get(selectorIndex);
                 if(i - mSelectorMiddleItemIndex > 0 ){
-                    mSelectorWheelPaint.setColor(Color.WHITE);
+                    mSelectorWheelPaint.setColor(freqColor);
                 }else if(i - mSelectorMiddleItemIndex < 0 ){
-                    mSelectorWheelPaint.setColor(Color.WHITE);
+                    mSelectorWheelPaint.setColor(freqColor);
                 }else{
-                    mSelectorWheelPaint.setColor(Color.WHITE);
+                    mSelectorWheelPaint.setColor(freqColor);
                 }
                 try {
                     fNumber = Float.valueOf(scrollSelectorValue).floatValue();
@@ -1484,7 +1486,7 @@ public class HorizontalNumberPicker extends LinearLayout {
                 }
                 if(bShowNumber){
                     float originalWidth = mSelectorWheelPaint.getStrokeWidth();
-                    mSelectorWheelPaint.setTypeface(Typeface.DEFAULT_BOLD);
+                    mSelectorWheelPaint.setTypeface(Typeface.DEFAULT);
                     mSelectorWheelPaint.setStrokeWidth(2);
                     mSelectorWheelPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     canvas.drawText(scrollSelectorValue, x, mTextSize * 2, mSelectorWheelPaint);

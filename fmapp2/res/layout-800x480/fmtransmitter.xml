@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:textColor="@android:color/white"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_centerInParent="true"
             android:layout_alignWithParentIfMissing="true"
             android:text="@string/transmit_msg_string"/>
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/default_blank"
-                android:textColor="@android:color/white"/>
+                android:textColor="?android:attr/textColorPrimary"/>
 
             <ImageView android:id="@+id/btn_forward"
                 android:clickable="true"
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="20dp"
-                android:textColor="@android:color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:singleLine="true"
                 android:textStyle="bold"
                 android:paddingLeft="2dp"

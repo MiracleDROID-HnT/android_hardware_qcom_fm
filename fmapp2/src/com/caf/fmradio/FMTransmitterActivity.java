@@ -906,7 +906,7 @@ public class FMTransmitterActivity extends Activity {
          }
          for (int nButton = 0; nButton < MAX_PRESETS; nButton++) {
              if (mPresetButtons[nButton] != null) {
-                 mPresetButtons[nButton].setTextColor(Color.WHITE);
+                 mPresetButtons[nButton].setTextColor(getResources().getColor(R.color.buttons_enabled);
              }
          }
       }else {
@@ -918,7 +918,7 @@ public class FMTransmitterActivity extends Activity {
          }
          for (int nButton = 0; nButton < MAX_PRESETS; nButton++) {
              if (mPresetButtons[nButton] != null) {
-                 mPresetButtons[nButton].setTextColor(Color.BLACK);
+                 mPresetButtons[nButton].setTextColor(getResources().getColor(R.color.buttons_disabled);
              }
          }
       }
