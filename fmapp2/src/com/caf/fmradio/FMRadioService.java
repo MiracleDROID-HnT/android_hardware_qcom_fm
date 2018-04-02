@@ -118,6 +118,7 @@ public class FMRadioService extends Service
    private static final String FMRADIO_DEVICE_FD_STRING = "/dev/radio0";
    private static final String FMRADIO_NOTIFICATION_CHANNEL = "fmradio_notification_channel";
    private static final String LOGTAG = "FMService";//FMRadio.LOGTAG;
+   private static final String FM_TURN_OFF = "fmradio.turnoff";
 
    private FmReceiver mReceiver;
    private BroadcastReceiver mHeadsetReceiver = null;
@@ -378,6 +379,7 @@ public class FMRadioService extends Service
       mWakeLock.release();
       super.onDestroy();
    }
+
 
    private synchronized void startAudioRecordSink() {
         mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.RADIO_TUNER,
@@ -1806,12 +1808,19 @@ public class FMRadioService extends Service
 
       notificationManager.createNotificationChannel(notificationChannel);
 
+       Intent offIntent = new Intent(FM_TURN_OFF);
+       offIntent.setClass(context, FMRadioService.class);
+       PendingIntent offPintent = PendingIntent.getService(context, 0, offIntent, 0);
+
       notification = new Notification.Builder(context, FMRADIO_NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.stat_notify_fm)
-            .setContentTitle(isFmOn() ? getString(R.string.app_name) : "")
+            .setContentTitle(isFmOn() ? getString(R.string.notif_title) : "")
             .setContentText(isFmOn() ? getTunedFrequencyString() : "")
             .setContentIntent(PendingIntent.getActivity(this,
                 0, new Intent("com.caf.fmradio.FMRADIO_ACTIVITY"), 0))
+            .addAction(R.drawable.btn_fm_stop,
+                getString(R.string.notif_stop), offPintent)
+            .setColor(context.getResources().getColor(R.color.primary))
             .setOngoing(true)
             .build();
 
@@ -1829,6 +1838,19 @@ public class FMRadioService extends Service
 
       notificationManager.deleteNotificationChannel(FMRADIO_NOTIFICATION_CHANNEL);
    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int ret = super.onStartCommand(intent, flags, startId);
+
+        if (intent != null) {
+            String action = intent.getAction();
+            if (FM_TURN_OFF.equals(action)) {
+                fmOff();
+            }
+        }
+        return START_NOT_STICKY;
+    }
 
    private void stop() {
       Log.d(LOGTAG,"in stop");
