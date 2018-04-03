@@ -17,6 +17,6 @@
 <resources>
 
     <!-- Adaptive icon background layer color -->
-    <color name="ic_launcher_fmradio_background">#607D8B</color>
+    <color name="ic_launcher_fmradio_background">@color/primary</color>
 
 </resources>
