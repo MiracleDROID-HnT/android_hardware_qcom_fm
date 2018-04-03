@@ -13,7 +13,7 @@
     <color name="picker_dial_color">@color/accent</color> <!-- color of frequency dial -->
 
     <!-- Frequency dialog -->
-    <color name="picker_frequency_back_forward_button_tint">@*android:color/secondary_material_settings_light</color> <!-- color of back and forward button of near frequency info -->
+    <color name="picker_frequency_back_forward_button_tint">@*android:color/secondary_material_settings</color> <!-- color of back and forward button of near frequency info -->
     <color name="picker_frequency_dialog_khz_background_color">@android:color/transparent</color> <!-- background color of kHz on frequency dialog -->
     <color name="picker_frequency_dialog_mhz_background_color">@android:color/transparent</color> <!-- background color of mHz on frequency dialog -->
     <color name="buttons_enabled">@android:color/white</color>
