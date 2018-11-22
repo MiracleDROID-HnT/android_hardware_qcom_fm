@@ -120,6 +120,7 @@ public class FMRadioService extends Service
    private static final String LOGTAG = "FMService";//FMRadio.LOGTAG;
 
    private FmReceiver mReceiver;
+   private final Object mReceiverLock = new Object();
    private BroadcastReceiver mHeadsetReceiver = null;
    private BroadcastReceiver mSdcardUnmountReceiver = null;
    private BroadcastReceiver mMusicCommandListener = null;
@@ -2630,10 +2631,12 @@ public class FMRadioService extends Service
       boolean bStatus=false;
 
       // This will disable the FM radio device
-      if (mReceiver != null)
-      {
-         bStatus = mReceiver.disable(this);
-         mReceiver = null;
+      synchronized(mReceiverLock) {
+         if (mReceiver != null)
+         {
+            bStatus = mReceiver.disable(this);
+            mReceiver = null;
+         }
       }
       fmOperationsOff();
       stop();
@@ -3296,10 +3299,12 @@ public class FMRadioService extends Service
    public boolean enableStereo(boolean bEnable)
    {
       boolean bCommandSent=false;
-      if (mReceiver != null)
-      {
-         Log.d(LOGTAG, "enableStereo: " + bEnable);
-         bCommandSent = mReceiver.setStereoMode(bEnable);
+      synchronized(mReceiverLock) {
+          if (mReceiver != null)
+          {
+             Log.d(LOGTAG, "enableStereo: " + bEnable);
+             bCommandSent = mReceiver.setStereoMode(bEnable);
+          }
       }
       return bCommandSent;
    }
