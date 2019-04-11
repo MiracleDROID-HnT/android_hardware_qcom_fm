@@ -121,6 +121,7 @@ public class FMRadioService extends Service
    private static final String FM_TURN_OFF = "fmradio.turnoff";
 
    private FmReceiver mReceiver;
+   private final Object mReceiverLock = new Object();
    private BroadcastReceiver mHeadsetReceiver = null;
    private BroadcastReceiver mSdcardUnmountReceiver = null;
    private BroadcastReceiver mMusicCommandListener = null;
@@ -243,6 +244,7 @@ public class FMRadioService extends Service
    private static final int ENABLE_SOFT_MUTE = 1;
 
    private static Object mNotchFilterLock = new Object();
+   private static Object mNotificationLock = new Object();
 
    private boolean mFmA2dpDisabled;
    private boolean mEventReceived = false;
@@ -1813,22 +1815,23 @@ public class FMRadioService extends Service
    public void startNotification() {
       Log.d(LOGTAG,"startNotification");
 
-      Context context = getApplicationContext();
-      Notification notification;
-      NotificationManager notificationManager =
+      synchronized (mNotificationLock) {
+          Context context = getApplicationContext();
+          Notification notification;
+          NotificationManager notificationManager =
               (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-      NotificationChannel notificationChannel =
+          NotificationChannel notificationChannel =
               new NotificationChannel(FMRADIO_NOTIFICATION_CHANNEL,
               context.getString(R.string.app_name),
               NotificationManager.IMPORTANCE_LOW);
 
-      notificationManager.createNotificationChannel(notificationChannel);
+          notificationManager.createNotificationChannel(notificationChannel);
 
-       Intent offIntent = new Intent(FM_TURN_OFF);
-       offIntent.setClass(context, FMRadioService.class);
-       PendingIntent offPintent = PendingIntent.getService(context, 0, offIntent, 0);
+          Intent offIntent = new Intent(FM_TURN_OFF);
+          offIntent.setClass(context, FMRadioService.class);
+          PendingIntent offPintent = PendingIntent.getService(context, 0, offIntent, 0);
 
-      notification = new Notification.Builder(context, FMRADIO_NOTIFICATION_CHANNEL)
+          notification = new Notification.Builder(context, FMRADIO_NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.stat_notify_fm)
             .setContentTitle(isFmOn() ? getString(R.string.notif_title) : "")
             .setContentText(isFmOn() ? getTunedFrequencyString() : "")
@@ -1840,19 +1843,24 @@ public class FMRadioService extends Service
             .setOngoing(true)
             .build();
 
-      startForeground(FMRADIOSERVICE_STATUS, notification);
-      mFMOn = true;
+          startForeground(FMRADIOSERVICE_STATUS, notification);
+          mFMOn = true;
+      }
    }
 
       /* hide the FM Notification */
    public void stopNotification() {
       Log.d(LOGTAG,"stopNotification");
 
-      Context context = getApplicationContext();
-      NotificationManager notificationManager =
-            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-      notificationManager.deleteNotificationChannel(FMRADIO_NOTIFICATION_CHANNEL);
+      synchronized (mNotificationLock) {
+          Context context = getApplicationContext();
+          NotificationManager notificationManager =
+              (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+          if((notificationManager != null)
+            && (notificationManager.getNotificationChannel(FMRADIO_NOTIFICATION_CHANNEL) != null)) {
+             notificationManager.deleteNotificationChannel(FMRADIO_NOTIFICATION_CHANNEL);
+          }
+      }
    }
 
     @Override
@@ -2651,10 +2659,12 @@ public class FMRadioService extends Service
       boolean bStatus=false;
 
       // This will disable the FM radio device
-      if (mReceiver != null)
-      {
-         bStatus = mReceiver.disable(this);
-         mReceiver = null;
+      synchronized(mReceiverLock) {
+         if (mReceiver != null)
+         {
+            bStatus = mReceiver.disable(this);
+            mReceiver = null;
+         }
       }
       fmOperationsOff();
       stop();
@@ -3329,10 +3339,12 @@ public class FMRadioService extends Service
    public boolean enableStereo(boolean bEnable)
    {
       boolean bCommandSent=false;
-      if (mReceiver != null)
-      {
-         Log.d(LOGTAG, "enableStereo: " + bEnable);
-         bCommandSent = mReceiver.setStereoMode(bEnable);
+      synchronized(mReceiverLock) {
+          if (mReceiver != null)
+          {
+             Log.d(LOGTAG, "enableStereo: " + bEnable);
+             bCommandSent = mReceiver.setStereoMode(bEnable);
+          }
       }
       return bCommandSent;
    }
