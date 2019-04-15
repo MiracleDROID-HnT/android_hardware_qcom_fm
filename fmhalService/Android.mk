@@ -34,6 +34,5 @@ LOCAL_C_INCLUDES += \
 
 LOCAL_MODULE := fmhal_service
 LOCAL_MODULE_TAGS := optional
-LOCAL_PROPRIETARY_MODULE := true
 
 include $(BUILD_EXECUTABLE)

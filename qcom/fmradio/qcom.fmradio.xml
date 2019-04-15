@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <permissions>
     <library name="qcom.fmradio"
-            file="/vendor/framework/qcom.fmradio.jar" />
+            file="/system/framework/qcom.fmradio.jar" />
 </permissions>
